@@ -30,6 +30,7 @@
   </head>
   <body>
     <div id="fb-root"></div>
+    <div id="log"></div>
     <script type="text/javascript">
       window.fbAsyncInit = function() {
         FB.init({
@@ -46,17 +47,17 @@
         
 				FB.login(function(response) {
 				 if (response.session) {
-				 	console.log("home");
+				 	$("#log").append("<br />home");
 				 } else {
-				 	console.log("canceled");
+				 	$("#log").append("<br />canceled ");
 				 }
 				});
 				
 				FB.api('/me',function(response) {
 				    if(response.data) {
-				    	console.log("oi " + response.data);
+				    	$("#log").append("<br />oi " + response.data);
 				    } else {
-				    	console.log("noth");
+				    	$("#log").append("<br />noth ");
 				    }
 				});
 
