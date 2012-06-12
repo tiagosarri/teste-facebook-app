@@ -40,16 +40,25 @@
           xfbml      : true                                     // parse XFBML
         });
 
-        // Listen to the auth.login which will be called when the user logs in
-        // using the Login button
         FB.Event.subscribe('auth.login', function(response) {
-          // We want to reload the page now so Ruby can read the cookie that the
-          // Javascript SDK sat. But we don't want to use
-          // window.location.reload() because if this is in a canvas there was a
-          // post made to this page and a reload will trigger a message to the
-          // user asking if they want to send data again.
           window.location = window.location;
         });
+        
+				FB.login(function(response) {
+				 if (response.session) {
+				 	console.log("home");
+				 } else {
+				 	console.log("canceled");
+				 }
+				});
+				
+				FB.api('/me',function(response) {
+				    if(response.data) {
+				    	console.log("oi " + response.data);
+				    } else {
+				    	console.log("noth");
+				    }
+				});
 
         FB.Canvas.setAutoGrow();
       };
@@ -72,6 +81,11 @@
 				clique aqui
 			</a>	
 		<% end %>
+		
+		temp: <%= @temp %><br />
+		temp 2: <%= @temp2 %><br />
+		temp 3: <%= @temp3 %><br />
+		cookies: <%=@facebook_cookies%><br />
 		
     <script type="text/javascript" src="/javascripts/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="/javascripts/application.js"></script>

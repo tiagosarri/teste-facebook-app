@@ -57,9 +57,17 @@ end
 get "/" do
   # Get base API Connection
   @graph  = Koala::Facebook::API.new(session[:access_token])
+  
+  #@facebook_cookies = Koala::Facebook::OAuth.new.get_user_info_from_cookie(cookies)
+  @facebook_cookies = nil
+
 
   # Get public details of current application
   @app  =  @graph.get_object(ENV["FACEBOOK_APP_ID"])
+
+  @temp = session[:facebook_session]
+  @temp2 = session[:access_token]
+  @temp3 = session[:code]
 
   if session[:access_token]
     @user    = @graph.get_object("me")
