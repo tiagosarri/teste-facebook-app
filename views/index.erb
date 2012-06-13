@@ -30,7 +30,24 @@
   </head>
   <body>
     <div id="fb-root"></div>
-    <div id="log"></div>
+		
+		<div id="box-main" style="display: none">
+			<div id="log"></div>
+			
+			<% if @user %>
+				Oi <%= @user['name'] %><br />
+			<% else %>
+				Começe a usar o aplicativo gritar gol
+				<a href='/auth/facebook' class="">
+					clique aqui
+				</a>
+			<% end %>
+		</div>	
+		
+		<br /><%=session[:access_token]%>
+    <script type="text/javascript" src="/javascripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/javascripts/application.js"></script>
+    
     <script type="text/javascript">
       window.fbAsyncInit = function() {
         FB.init({
@@ -45,21 +62,17 @@
         FB.Event.subscribe('auth.login', function(response) {
           window.location = window.location;
         });
-        
-				/*FB.login(function(response) {
-				 if (response.session) {
-				 	$("#log").append("<br />home");
-				 } else {
-				 	$("#log").append("<br />canceled ");
-				 }
-				});*/
 				
 				FB.getLoginStatus(function(response) {
 				  if (response.status === 'connected') {
 				    var uid = response.authResponse.userID;
 				    var accessToken = response.authResponse.accessToken;
-				    $("#log").append("<br />connected " + response.authResponse.accessToken);
-				    
+				    //$("#log").append("<br />connected " + response.authResponse.accessToken);
+					    <% if @user %>
+					    	$("#box-main").show();
+					    <% else %>	
+					    	window.location.href = "/auth/facebook/callback?code=" + response.authResponse.accessToken;
+					    <% end %>	
 						FB.api(
 						  {
 						    method: 'fql.query',
@@ -71,25 +84,15 @@
 						);
 				    
 				  } else if (response.status === 'not_authorized') {
-				    // the user is logged in to Facebook, 
-				    // but has not authenticated your app
+				  	$("#box-main").show();
 				    $("#log").append("<br />logged ");
 				  } else {
+				  	$("#box-main").show();
 				    // the user isn't logged in to Facebook.
 				    $("#log").append("<br />logged in to Facebook");
 				  }
 				 });
 				
-				/*
-				FB.api('/me',function(response) {
-				    if(response.session) {
-				    	$("#log").append("<br />oi " + response);
-				    } else {
-				    	$("#log").append("<br />noth ");
-				    }
-				});
-				*/
-
         FB.Canvas.setAutoGrow();
       };
 
@@ -101,26 +104,7 @@
         js.src = "//connect.facebook.net/en_US/all.js";
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
-    </script>
-
-		<% if @user %>
-			Oi <%= @user['name'] %>
-		<% else %>
-			Começe a usar o aplicativo gritar gol
-			<a href='/auth/facebook' class="">
-				clique aqui
-			</a>
-		<% end %>
-		
-		<br />
-		temp 2: <%= @temp2 %><br />
-		temp 4 : <%=params[:code]%><br />
-		temp 5: <%=env['rack.session']%><br />
-		temp 6: <%= ENV['USER']%><br />
-		
-		
-    <script type="text/javascript" src="/javascripts/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="/javascripts/application.js"></script>
+    </script>    
 
 		
   </body>
