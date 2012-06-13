@@ -99,6 +99,15 @@ get "/auth/facebook" do
 end
 
 get '/auth/facebook/callback' do
+  @graph  = Koala::Facebook::API.new(session[:access_token])
+  @app  =  @graph.get_object(ENV["FACEBOOK_APP_ID"])
+  
 	session[:access_token] = authenticator.get_access_token(params[:code])
-	redirect '/'
+	redirect "http://apps.facebook.com/#{@app['name'].downcase}/"
 end
+
+get '/connect' do
+  session[:access_token] = params[:code]
+  redirect '/'
+end
+

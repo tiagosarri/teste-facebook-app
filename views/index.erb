@@ -33,9 +33,26 @@
 		
 		<div id="box-main" style="display: none">
 			<div id="log"></div>
-			
 			<% if @user %>
 				Oi <%= @user['name'] %><br />
+				
+				<% if @friends_using_app != nil && @friends_using_app.length > 0 %>
+          <div class="list">
+            <h3>Friends using this app</h3>
+            <ul class="friends">
+              <% @friends_using_app.each do |friend_result| %>
+                <li>
+                  <a href="#" onclick="window.open('http://www.facebook.com/<%= friend_result['uid'] %>')">
+                    <img src="<%= friend_result['pic_square'] %>" alt="<%= friend_result['name'] %>">
+                    <%= friend_result['name'] %>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+				<% else %>
+					nenhum amigo utilizando este aplicativo
+				<% end %>
 			<% else %>
 				Começe a usar o aplicativo gritar gol
 				<a href='/auth/facebook' class="">
@@ -44,7 +61,6 @@
 			<% end %>
 		</div>	
 		
-		<br /><%=session[:access_token]%>
     <script type="text/javascript" src="/javascripts/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="/javascripts/application.js"></script>
     
@@ -71,10 +87,9 @@
 					    <% if @user %>
 					    	$("#box-main").show();
 					    <% else %>	
-					    	//window.location.href = "/auth/facebook/callback?code=" + response.authResponse.accessToken;
-					    	top.location = "/auth/facebook/callback?code=" + encodeURIComponent(response.authResponse.accessToken);
+					    	window.location.href = "/connect?code=" + response.authResponse.accessToken;
 					    <% end %>	
-						FB.api(
+						/*FB.api(
 						  {
 						    method: 'fql.query',
 						    query: 'SELECT name FROM user WHERE uid=me()'
@@ -82,15 +97,14 @@
 						  function(response) {
 						    $("#log").append("<br />name: "+ response[0].name);
 						  }
-						);
+						);*/
 				    
 				  } else if (response.status === 'not_authorized') {
 				  	$("#box-main").show();
-				    $("#log").append("<br />logged ");
+				    //$("#log").append("<br />logged ");
 				  } else {
 				  	$("#box-main").show();
-				    // the user isn't logged in to Facebook.
-				    $("#log").append("<br />logged in to Facebook");
+				    //$("#log").append("<br />logged in to Facebook");
 				  }
 				 });
 				
