@@ -71,7 +71,8 @@
 					    <% if @user %>
 					    	$("#box-main").show();
 					    <% else %>	
-					    	window.location.href = "/auth/facebook/callback?code=" + response.authResponse.accessToken;
+					    	//window.location.href = "/auth/facebook/callback?code=" + response.authResponse.accessToken;
+					    	top.location = "/auth/facebook/callback?code=" + encodeURIComponent(response.authResponse.accessToken);
 					    <% end %>	
 						FB.api(
 						  {
