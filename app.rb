@@ -66,9 +66,7 @@ get "/" do
   # Get public details of current application
   @app  =  @graph.get_object(ENV["FACEBOOK_APP_ID"])
 
-  @temp = session[:facebook_session]
   @temp2 = session[:access_token]
-  @temp3 = session[:code]
 
   if session[:access_token]
     @user    = @graph.get_object("me")

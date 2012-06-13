@@ -38,7 +38,8 @@
           channelUrl : "<%= url_no_scheme('/channel.html') %>", // Channel File
           status     : true,                                    // check login status
           cookie     : true,                                    // enable cookies to allow the server to access the session
-          xfbml      : true                                     // parse XFBML
+          xfbml      : true,                                    // parse XFBML
+          oauth      : true
         });
 
         FB.Event.subscribe('auth.login', function(response) {
@@ -53,6 +54,33 @@
 				 }
 				});*/
 				
+				FB.getLoginStatus(function(response) {
+				  if (response.status === 'connected') {
+				    var uid = response.authResponse.userID;
+				    var accessToken = response.authResponse.accessToken;
+				    $("#log").append("<br />connected " + response.authResponse.accessToken);
+				    
+						FB.api(
+						  {
+						    method: 'fql.query',
+						    query: 'SELECT name FROM user WHERE uid=me()'
+						  },
+						  function(response) {
+						    $("#log").append("<br />name: "+ response[0].name);
+						  }
+						);
+				    
+				  } else if (response.status === 'not_authorized') {
+				    // the user is logged in to Facebook, 
+				    // but has not authenticated your app
+				    $("#log").append("<br />logged ");
+				  } else {
+				    // the user isn't logged in to Facebook.
+				    $("#log").append("<br />logged in to Facebook");
+				  }
+				 });
+				
+				/*
 				FB.api('/me',function(response) {
 				    if(response.session) {
 				    	$("#log").append("<br />oi " + response);
@@ -60,6 +88,7 @@
 				    	$("#log").append("<br />noth ");
 				    }
 				});
+				*/
 
         FB.Canvas.setAutoGrow();
       };
@@ -80,15 +109,15 @@
 			Começe a usar o aplicativo gritar gol
 			<a href='/auth/facebook' class="">
 				clique aqui
-			</a>	
+			</a>
 		<% end %>
 		
-		temp: <%= @temp %><br />
+		<br />
 		temp 2: <%= @temp2 %><br />
-		temp 3: <%= @temp3 %><br />
-		cookies: <%=@facebook_cookies%><br />
 		temp 4 : <%=params[:code]%><br />
 		temp 5: <%=env['rack.session']%><br />
+		temp 6: <%= ENV['USER']%><br />
+		
 		
     <script type="text/javascript" src="/javascripts/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="/javascripts/application.js"></script>
