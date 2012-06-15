@@ -13,6 +13,7 @@ set :show_exceptions, false
 # permissions your app needs.
 # See https://developers.facebook.com/docs/reference/api/permissions/
 # for a full list of permissions
+
 FACEBOOK_SCOPE = 'user_likes,user_photos,user_photo_video_tags'
 
 unless ENV["FACEBOOK_APP_ID"] && ENV["FACEBOOK_SECRET"]
